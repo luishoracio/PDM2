@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">PDM2</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="btn_Animar">Animar</string>
+    <string name="title_activity_internet">internetActivity</string>
+    <string name="btn_Cambiar_Activity">Cambiar</string>
+    <string name="title_activity_webview">Webapp</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_web">WebApp</string>
+    <string name="title_activity_login">Acceso de Usuario</string>
+    <string name="username_hint">Nombre de usuario</string>
+    <string name="password_hint">Contraseña</string>
+    <string name="title_activity_signup">SignupActivity</string>
+    <string name="title_error">Cuidado</string>
+    <string name="title_error_mensaje">Red no disponible</string>
+
+</resources>
