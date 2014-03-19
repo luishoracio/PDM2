@@ -3,12 +3,11 @@ package com.tec2.pdm2.app;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.MediaPlayer;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -65,7 +64,8 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void cambiarActivity(){
-        Intent intent = new Intent(this, InternetActivity.class);
+        //Intent intent = new Intent(this, InternetActivity.class);
+        Intent intent = new Intent(this, LIstaActivity.class);
         startActivityForResult(intent, 0);
     }
 

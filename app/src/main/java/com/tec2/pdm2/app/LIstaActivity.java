@@ -1,9 +1,6 @@
 package com.tec2.pdm2.app;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -11,8 +8,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -26,72 +24,29 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-public class InternetActivity extends ActionBarActivity {
 
-    public static final String  TAG = InternetActivity.class.getSimpleName();
-    protected TextView textResultado;
-    protected TextView textNombre;
-    protected ProgressBar barra;
-
+public class LIstaActivity extends ActionBarActivity {
+    public static final String  TAG =
+            LIstaActivity.class.getSimpleName();
+    ListView lista;
+    JSONArray datosServidor;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_internet);
+        setContentView(R.layout.activity_lista);
 
-        textResultado = (TextView)findViewById(R.id.textoMensaje);
-        textNombre = (TextView)findViewById(R.id.txtNombre);
-        barra = (ProgressBar)findViewById(R.id.progressBar);
-        obtenerTextoInternet();
+        lista = (ListView)findViewById(R.id.listView);
+
+        GetAPI getAPI = new GetAPI();
+        getAPI.execute();
     }
 
-    private void obtenerTextoInternet() {
-        if(isNetworkAvailable()){
-            GetAPI getAPI = new GetAPI();
-            getAPI.execute();
-        }else{
-            //Toast.makeText(this, "Hola", Toast.LENGTH_LONG).show();
-            mostrarAlerta();
-        }
-    }
-
-    private void mostrarAlerta() {
-        textNombre.setText("");
-        textResultado.setText("");
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getString(R.string.title_error));
-        builder.setMessage(getString(R.string.title_error_mensaje));
-        builder.setPositiveButton(android.R.string.ok,null);
-
-        AlertDialog alertDialog =builder.create();
-        alertDialog.show();
-    }
-
-    private boolean isNetworkAvailable() {
-        boolean isAvailable = false;
-
-        ConnectivityManager manager = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
-
-
-        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
-
-        if (networkInfo != null && networkInfo.isConnected()){
-            isAvailable = true;
-        }
-        else{
-            Toast.makeText(this, "Sin Conexión", Toast.LENGTH_LONG);
-        }
-
-
-        return isAvailable;
-    }
-
-    private class GetAPI extends AsyncTask<Object, Void, JSONArray>{
+    private class GetAPI extends AsyncTask<Object, Void, JSONArray> {
         @Override
         protected void onPreExecute(){
-            barra.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -104,7 +59,7 @@ public class InternetActivity extends ActionBarActivity {
 
             try{
                 URL apiURL =  new URL(
-                    "http://continentalrescueafrica.com/2013/testJSON.php");
+                        "http://continentalrescueafrica.com/2013/testJSON.php");
 
                 HttpURLConnection httpConnection = (HttpURLConnection)
                         apiURL.openConnection();
@@ -114,7 +69,7 @@ public class InternetActivity extends ActionBarActivity {
                 if (responseCode == HttpURLConnection.HTTP_OK){
                     InputStream inputStream = httpConnection.getInputStream();
                     BufferedReader bReader = new BufferedReader(
-                        new InputStreamReader(inputStream, "UTF-8"), 8);
+                            new InputStreamReader(inputStream, "UTF-8"), 8);
 
                     StringBuilder sBuilder = new StringBuilder();
 
@@ -142,22 +97,75 @@ public class InternetActivity extends ActionBarActivity {
 
         @Override
         protected void onPostExecute(JSONArray respuesta) {
-            try{
-                barra.setVisibility(View.INVISIBLE);
-                JSONObject jsonObject = respuesta.getJSONObject(0);
-                textResultado.setText(jsonObject.getString("mensaje") );
-                textNombre.setText( jsonObject.getString("nombre"));
-            }
-            catch (JSONException e){}
+
+            enlistarDatos(respuesta);
         }
     }
 
+    private void enlistarDatos(JSONArray datos) {
+        if (datos == null){
+            Toast.makeText(this, "Error en el servidor",
+                    Toast.LENGTH_LONG).show();
+        }
+        else{
+            datosServidor = datos;
+            ArrayList<HashMap<String,String>> valores =
+                    new ArrayList<HashMap<String, String>>();
+
+            try{
+                for (int i =0; i< datos.length(); i++){
+                    JSONObject valor = datos.getJSONObject(i);
+
+                    HashMap<String, String> hashValor =
+                            new HashMap<String, String>();
+
+                    hashValor.put("id", valor.getString("id"));
+                    hashValor.put("nombre",valor.getString("nombre"));
+
+                    valores.add(hashValor);
+
+                }
+                String[] llaves = {"id","nombre"};
+                int[] ids = {android.R.id.text2,android.R.id.text1};
+
+                SimpleAdapter adaptador = new SimpleAdapter(this, valores,
+                        android.R.layout.simple_list_item_2,
+                        llaves, ids);
+
+                lista.setAdapter(adaptador);
+                lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView,
+                                            View view, int i, long l) {
+                        mostrarAlerta(i);
+
+                    }
+                });
+
+            }
+            catch (JSONException e){}
+        }
+
+    }
+    private void mostrarAlerta(int posicion) {
+        try{
+            JSONObject jsonObject = datosServidor.getJSONObject(posicion);
+            String datoObtenido = jsonObject.getString("nombre");
+
+            Intent intent = new Intent(this, DesplegarMensajeActivity.class);
+            intent.putExtra("nombre", datoObtenido);
+            intent.putExtra("mensaje", jsonObject.getString("mensaje"));
+            startActivity(intent);
+
+        }
+        catch (JSONException e){}
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.internet, menu);
+        getMenuInflater().inflate(R.menu.lista, menu);
         return true;
     }
 
