@@ -19,5 +19,7 @@
     <string name="title_error_mensaje">Red no disponible</string>
     <string name="title_activity_lista">LIstaActivity</string>
     <string name="title_activity_desplegar_mensaje">DesplegarMensajeActivity</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_preferencias">Preferencias</string>
 
 </resources>

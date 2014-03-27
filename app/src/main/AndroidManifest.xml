@@ -49,6 +49,14 @@
             android:name="com.tec2.pdm2.app.DesplegarMensajeActivity"
             android:label="@string/title_activity_desplegar_mensaje" >
         </activity>
+        <activity
+            android:name="com.tec2.pdm2.app.SettingsActivity"
+            android:label="@string/title_activity_settings" >
+        </activity>
+        <activity
+            android:name="com.tec2.pdm2.app.PreferenciasActivity"
+            android:label="@string/title_activity_preferencias" >
+        </activity>
     </application>
 
 </manifest>
