@@ -65,7 +65,7 @@ public class MainActivity extends ActionBarActivity {
 
     private void cambiarActivity(){
         //Intent intent = new Intent(this, InternetActivity.class);
-        Intent intent = new Intent(this, LIstaActivity.class);
+        Intent intent = new Intent(this, ListaActivity.class);
         startActivityForResult(intent, 0);
     }
 

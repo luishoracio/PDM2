@@ -42,7 +42,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.tec2.pdm2.app.LIstaActivity"
+            android:name=".ListaActivity"
             android:label="@string/title_activity_lista" >
         </activity>
         <activity
