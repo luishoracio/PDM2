@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -24,13 +23,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 
-public class LIstaActivity extends ActionBarActivity {
+public class ListaActivity extends ActionBarActivity {
     public static final String  TAG =
-            LIstaActivity.class.getSimpleName();
+            ListaActivity.class.getSimpleName();
     ListView lista;
     JSONArray datosServidor;
     @Override
@@ -109,44 +106,21 @@ public class LIstaActivity extends ActionBarActivity {
         }
         else{
             datosServidor = datos;
-            ArrayList<HashMap<String,String>> valores =
-                    new ArrayList<HashMap<String, String>>();
+            Usuarios usuarios = new Usuarios(datos);
 
-            try{
-                for (int i =0; i< datos.length(); i++){
-                    JSONObject valor = datos.getJSONObject(i);
+            lista.setAdapter(new Adaptador(this,usuarios.getUsuarios()));
 
-                    HashMap<String, String> hashValor =
-                            new HashMap<String, String>();
-
-                    hashValor.put("id", valor.getString("id"));
-                    hashValor.put("nombre",valor.getString("nombre"));
-
-                    valores.add(hashValor);
-
+            lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView,
+                                        View view, int i, long l) {
+                    mostrarAlerta(i);
                 }
-                String[] llaves = {"id","nombre"};
-                int[] ids = {android.R.id.text2,android.R.id.text1};
+            });
 
-                SimpleAdapter adaptador = new SimpleAdapter(this, valores,
-                        android.R.layout.simple_list_item_2,
-                        llaves, ids);
-
-                lista.setAdapter(adaptador);
-                lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView,
-                                            View view, int i, long l) {
-                        mostrarAlerta(i);
-
-                    }
-                });
-
-            }
-            catch (JSONException e){}
         }
-
     }
+
     private void mostrarAlerta(int posicion) {
         try{
             JSONObject jsonObject = datosServidor.getJSONObject(posicion);

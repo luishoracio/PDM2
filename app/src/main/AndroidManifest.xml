@@ -31,18 +31,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name="com.tec2.pdm2.app.LoginActivity"
-            android:label="@string/title_activity_login"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name="com.tec2.pdm2.app.SignupActivity"
-            android:label="@string/title_activity_signup"
-            android:parentActivityName="com.tec2.pdm2.app.LoginActivity"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name=".ListaActivity"
+            android:name="com.tec2.pdm2.app.ListaActivity"
             android:label="@string/title_activity_lista" >
         </activity>
         <activity
@@ -57,6 +46,27 @@
             android:name="com.tec2.pdm2.app.PreferenciasActivity"
             android:label="@string/title_activity_preferencias" >
         </activity>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name="com.tec2.pdm2.app.LogueoActivity"
+            android:label="@string/title_activity_logueo"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
     </application>
+
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
+    <!--
+     To retrieve OAuth 2.0 tokens or invalidate tokens to disconnect a user. This disconnect
+     option is required to comply with the Google+ Sign-In developer policies
+    -->
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" />
 
 </manifest>
